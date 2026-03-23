@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
@@ -277,3 +278,365 @@
 </div>
 </footer>
 </body></html>
+=======
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharedum DApp</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #1a1d27;
+      border-radius: 12px;
+      border: 1px solid #2d3148;
+      margin-bottom: 40px;
+    }
+
+    .logo { font-size: 1.4rem; font-weight: 700; color: #7c3aed; }
+    .logo span { color: #a78bfa; }
+
+    #connectBtn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    #connectBtn:hover { background: #6d28d9; }
+    #connectBtn:active { transform: scale(0.97); }
+    #connectBtn.connected { background: #059669; cursor: default; }
+
+    .wallet-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: #111827;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+    .wallet-info.visible { display: flex; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
+    .address { font-family: monospace; color: #a78bfa; }
+    .balance { color: #94a3b8; margin-left: 6px; }
+
+    main {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px; }
+    .card .value { font-size: 1.4rem; font-weight: 700; color: #e2e8f0; word-break: break-all; }
+    .card .sub { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+
+    #networkBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+    #networkBadge.correct { border-color: #7c3aed; color: #a78bfa; }
+
+    .action-card {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 24px;
+      grid-column: 1 / -1;
+    }
+    .action-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .input-row input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 14px;
+      background: #111827;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-row input:focus { border-color: #7c3aed; }
+    .input-row button, .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .input-row button:hover, .btn:hover { background: #6d28d9; }
+    .input-row button:disabled, .btn:disabled { background: #374151; cursor: not-allowed; }
+
+    #statusMsg {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: #a78bfa;
+      min-height: 20px;
+    }
+    #statusMsg.error { color: #f87171; }
+    #statusMsg.success { color: #34d399; }
+
+    #addNetworkBtn {
+      display: none;
+      margin-top: 12px;
+    }
+    #addNetworkBtn.visible { display: inline-block; }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.8rem;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Share<span>dum</span></div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="wallet-info" id="walletInfo">
+      <div class="dot"></div>
+      <span class="address" id="shortAddress"></span>
+      <span class="balance" id="balanceDisplay"></span>
+    </div>
+    <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</header>
+
+<main>
+  <!-- Network Card -->
+  <div class="card">
+    <h3>Network</h3>
+    <div id="networkBadge">Not connected</div>
+    <div class="sub" id="chainIdDisplay"></div>
+    <button class="btn" id="addNetworkBtn" style="margin-top:14px;font-size:0.8rem;padding:8px 14px;" onclick="addShardeumNetwork()">
+      + Add Shardeum Testnet
+    </button>
+  </div>
+
+  <!-- Wallet Card -->
+  <div class="card">
+    <h3>Wallet Address</h3>
+    <div class="value" id="fullAddress" style="font-size:0.85rem;font-family:monospace;">—</div>
+    <div class="sub" id="nativeBalance">Balance: —</div>
+  </div>
+
+  <!-- SimpleStorage interaction -->
+  <div class="action-card">
+    <h2>SimpleStorage Contract</h2>
+    <p style="font-size:0.85rem;color:#64748b;margin-bottom:16px;">
+      Enter your deployed <code style="color:#a78bfa">SimpleStorage</code> contract address to read or update the stored value.
+    </p>
+    <div class="input-row" style="margin-bottom:10px;">
+      <input id="contractAddress" type="text" placeholder="Contract address (0x...)" />
+      <button onclick="loadContract()">Load</button>
+    </div>
+    <div id="contractSection" style="display:none;margin-top:16px;">
+      <div style="margin-bottom:12px;">
+        <span style="color:#64748b;font-size:0.85rem;">Stored Value: </span>
+        <span id="storedValue" style="font-size:1.1rem;font-weight:700;color:#a78bfa;">—</span>
+        <button class="btn" onclick="readValue()" style="font-size:0.8rem;padding:6px 14px;margin-left:10px;">Refresh</button>
+      </div>
+      <div class="input-row">
+        <input id="newValue" type="number" placeholder="New value" min="0" />
+        <button onclick="setValue()">Set Value</button>
+      </div>
+    </div>
+    <div id="statusMsg"></div>
+  </div>
+</main>
+
+<footer>Built on Shardeum &mdash; EVM-compatible Layer 1</footer>
+
+<script>
+  // Shardeum Testnet (Mezame)
+  const SHARDEUM_TESTNET = {
+    chainId: '0x1FB7',       // 8119 in hex
+    chainName: 'Shardeum Mezame (Testnet)',
+    nativeCurrency: { name: 'SHM', symbol: 'SHM', decimals: 18 },
+    rpcUrls: ['https://api-mezame.shardeum.org'],
+    blockExplorerUrls: ['https://explorer-mezame.shardeum.org']
+  };
+
+  const SIMPLE_STORAGE_ABI = [
+    "function value() view returns (uint256)",
+    "function owner() view returns (address)",
+    "function setValue(uint256 _value)",
+    "event ValueUpdated(address indexed setter, uint256 oldValue, uint256 newValue)"
+  ];
+
+  let provider, signer, account, storageContract;
+
+  // ── Wallet connection ──────────────────────────────────────────────────────
+  async function connectWallet() {
+    if (!window.ethereum) {
+      return setStatus('MetaMask not detected. Please install it.', 'error');
+    }
+    try {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      provider = new ethers.BrowserProvider(window.ethereum);
+      signer   = await provider.getSigner();
+      account  = await signer.getAddress();
+      await updateUI();
+    } catch (e) {
+      setStatus(e.message, 'error');
+    }
+  }
+
+  async function updateUI() {
+    const network = await provider.getNetwork();
+    const chainId = Number(network.chainId);
+    const bal = await provider.getBalance(account);
+    const balEth = parseFloat(ethers.formatEther(bal)).toFixed(4);
+
+    // Header wallet info
+    document.getElementById('shortAddress').textContent = shortAddr(account);
+    document.getElementById('balanceDisplay').textContent = `${balEth} SHM`;
+    document.getElementById('walletInfo').classList.add('visible');
+
+    // Connect button → connected state
+    const btn = document.getElementById('connectBtn');
+    btn.textContent = 'Connected';
+    btn.classList.add('connected');
+
+    // Cards
+    document.getElementById('fullAddress').textContent = account;
+    document.getElementById('nativeBalance').textContent = `Balance: ${balEth} SHM`;
+
+    // Network badge
+    const badge = document.getElementById('networkBadge');
+    document.getElementById('chainIdDisplay').textContent = `Chain ID: ${chainId}`;
+    if (chainId === 8119) {
+      badge.textContent = '✓ Shardeum Testnet';
+      badge.classList.add('correct');
+      document.getElementById('addNetworkBtn').classList.remove('visible');
+    } else {
+      badge.textContent = `Chain: ${chainId}`;
+      badge.classList.remove('correct');
+      document.getElementById('addNetworkBtn').classList.add('visible');
+    }
+  }
+
+  // ── Add / switch network ───────────────────────────────────────────────────
+  async function addShardeumNetwork() {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [SHARDEUM_TESTNET]
+      });
+      await updateUI();
+    } catch (e) {
+      setStatus(e.message, 'error');
+    }
+  }
+
+  // ── SimpleStorage helpers ──────────────────────────────────────────────────
+  async function loadContract() {
+    const addr = document.getElementById('contractAddress').value.trim();
+    if (!addr) return setStatus('Enter a contract address.', 'error');
+    if (!provider) return setStatus('Connect your wallet first.', 'error');
+    try {
+      storageContract = new ethers.Contract(addr, SIMPLE_STORAGE_ABI, signer);
+      await readValue();
+      document.getElementById('contractSection').style.display = 'block';
+      setStatus('Contract loaded!', 'success');
+    } catch (e) {
+      setStatus('Failed to load contract: ' + e.message, 'error');
+    }
+  }
+
+  async function readValue() {
+    if (!storageContract) return;
+    try {
+      const val = await storageContract.value();
+      document.getElementById('storedValue').textContent = val.toString();
+    } catch (e) {
+      setStatus('Read failed: ' + e.message, 'error');
+    }
+  }
+
+  async function setValue() {
+    if (!storageContract) return;
+    const num = document.getElementById('newValue').value;
+    if (num === '') return setStatus('Enter a value.', 'error');
+    try {
+      setStatus('Sending transaction…');
+      const tx = await storageContract.setValue(num);
+      setStatus('Waiting for confirmation…');
+      await tx.wait();
+      await readValue();
+      setStatus('Value updated!', 'success');
+    } catch (e) {
+      setStatus(e.reason || e.message, 'error');
+    }
+  }
+
+  // ── Utils ──────────────────────────────────────────────────────────────────
+  function shortAddr(addr) {
+    return addr.slice(0, 6) + '…' + addr.slice(-4);
+  }
+
+  function setStatus(msg, type = '') {
+    const el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = type;
+  }
+
+  // Listen for account / network changes
+  if (window.ethereum) {
+    window.ethereum.on('accountsChanged', () => location.reload());
+    window.ethereum.on('chainChanged',    () => location.reload());
+  }
+</script>
+</body>
+</html>
+>>>>>>> a179c8fc5c689430a357f16b95b2d306eb42ad31
