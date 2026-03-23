@@ -107,13 +107,13 @@
 <div class="flex justify-between items-center px-8 h-20 w-full max-w-7xl mx-auto">
 <div class="text-2xl font-bold tracking-tight text-[#e4e3fe]">CampusToken</div>
 <div class="hidden md:flex items-center space-x-8">
-<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Launchpad</a>
-<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Tokens</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="index.html">Launchpad</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="dashboard.html">Tokens</a>
 <a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Staking</a>
 <a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Governance</a>
-<a class="text-[#ca98ff] font-bold border-b-2 border-[#ca98ff] pb-1" href="#">Leaderboards</a>
+<a class="text-[#ca98ff] font-bold border-b-2 border-[#ca98ff] pb-1" href="leaderboard.html">Leaderboards</a>
 </div>
-<button class="bg-primary text-on-primary-fixed px-6 py-2.5 rounded-full font-bold active:scale-95 transition-transform">Connect Wallet</button>
+<button class="bg-primary text-on-primary-fixed px-6 py-2.5 rounded-full font-bold active:scale-95 transition-transform" id="walletBtn">Connect Wallet</button>
 </div>
 </nav>
 <main class="pt-32 pb-20 px-8 max-w-7xl mx-auto relative overflow-x-hidden">
@@ -124,7 +124,7 @@
 <div class="flex items-start justify-between">
 <div>
 <p class="text-on-surface-variant text-sm font-medium mb-1 uppercase tracking-widest">Active Tokens</p>
-<h2 class="text-4xl font-headline font-extrabold text-on-surface">1,248</h2>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface" id="totalTokenCount">1,248</h2>
 </div>
 <span class="material-symbols-outlined text-primary text-3xl">token</span>
 </div>
@@ -157,7 +157,7 @@
 <div class="bg-surface-container-low p-4 rounded-xl mb-8 flex flex-wrap items-center gap-4">
 <div class="relative flex-1 min-w-[280px]">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="w-full bg-surface-container-lowest border-none rounded-full pl-12 pr-12 py-3 focus:ring-2 focus:ring-secondary/20 text-on-surface" placeholder="Search tokens or student tags..." type="text"/>
+<input class="w-full bg-surface-container-lowest border-none rounded-full pl-12 pr-12 py-3 focus:ring-2 focus:ring-secondary/20 text-on-surface" placeholder="Search tokens or student tags..." type="text" id="searchInput"/>
 <div class="absolute right-4 top-1/2 -translate-y-1/2">
 <svg class="animate-spin h-5 w-5 text-secondary/40" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -214,7 +214,7 @@
 <th class="px-6 py-4 font-semibold text-right">Market Cap</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/5">
+<tbody class="divide-y divide-outline-variant/5" id="tokenTableBody">
 <!-- Row 1: Gold Winner -->
 <tr class="hover:bg-primary/5 transition-all cursor-pointer group relative">
 <td class="px-6 py-6">
@@ -440,4 +440,57 @@
 </div>
 </div>
 </footer>
+<!-- Ethers.js with fallback CDNs -->
+<script>
+(function() {
+    var cdns = [
+        "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js",
+        "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js",
+        "https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"
+    ];
+    var idx = 0;
+    function loadNext() {
+        if (idx >= cdns.length) {
+            alert("Failed to load Ethers.js. Please check your internet connection.");
+            return;
+        }
+        var s = document.createElement("script");
+        s.src = cdns[idx++];
+        s.onload = function() {
+            console.log("✅ Ethers.js loaded!");
+            var b = document.createElement("script");
+            b.src = "./blockchain.js";
+            b.onload = function() {
+                console.log("✅ blockchain.js loaded!");
+                if (window.ethereum) {
+                    window.ethereum.request({ method: "eth_accounts" }).then(function(accounts) {
+                        if (accounts.length > 0) {
+                            connectWallet();
+                        } else {
+                            // Load leaderboard read-only without wallet
+                            try {
+                                provider = new ethers.providers.JsonRpcProvider("https://api-mezame.shardeum.org");
+                                factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, provider);
+                                loadLeaderboard();
+                            } catch(e) { console.log("Read-only load failed:", e); }
+                        }
+                    });
+                }
+            };
+            document.body.appendChild(b);
+        };
+        s.onerror = function() {
+            console.warn("CDN failed, trying next:", s.src);
+            loadNext();
+        };
+        document.body.appendChild(s);
+    }
+    loadNext();
+})();
+
+// Leaderboard-specific: called after wallet connects
+async function onWalletConnected() {
+    await loadLeaderboard();
+}
+</script>
 </body></html>

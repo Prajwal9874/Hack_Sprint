@@ -1,47 +1,67 @@
 const hre = require("hardhat");
+const fs = require("fs");
+const path = require("path");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-  const network = hre.network.name;
+    console.log("🚀 Deploying CampusToken contracts to Shardeum...\n");
 
-  console.log("=".repeat(50));
-  console.log(`Network:  ${network}`);
-  console.log(`Deployer: ${deployer.address}`);
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("📦 Deploying from wallet:", deployer.address);
 
-  const balance = await hre.ethers.provider.getBalance(deployer.address);
-  console.log(`Balance:  ${hre.ethers.formatEther(balance)} SHM`);
-  console.log("=".repeat(50));
+    // Deploy TokenFactory
+    const TokenFactory = await hre.ethers.getContractFactory("TokenFactory");
+    const factory = await TokenFactory.deploy();
 
-  // ── Deploy SimpleStorage ─────────────────────────────────────────────────
-  console.log("\n[1/2] Deploying SimpleStorage...");
-  const SimpleStorage = await hre.ethers.getContractFactory("SimpleStorage");
-  const simpleStorage = await SimpleStorage.deploy(42);
-  await simpleStorage.waitForDeployment();
-  const ssAddress = await simpleStorage.getAddress();
-  console.log(`  SimpleStorage deployed to: ${ssAddress}`);
+    // Handle both old and new Hardhat versions
+    if (factory.waitForDeployment) {
+        await factory.waitForDeployment();                  // Hardhat v3 / ethers v6
+    } else {
+        await factory.deployed();                           // Hardhat v2 / ethers v5
+    }
 
-  // ── Deploy ShardeumToken ─────────────────────────────────────────────────
-  console.log("\n[2/2] Deploying ShardeumToken...");
-  const ShardeumToken = await hre.ethers.getContractFactory("ShardeumToken");
-  const token = await ShardeumToken.deploy("Shardeum Token", "SHT", 1_000_000);
-  await token.waitForDeployment();
-  const tokenAddress = await token.getAddress();
-  console.log(`  ShardeumToken deployed to: ${tokenAddress}`);
+    // Get address (works for both versions)
+    const factoryAddress = factory.target ?? factory.address;
 
-  // ── Summary ──────────────────────────────────────────────────────────────
-  const explorerBase =
-    network === "shardeum_mainnet"
-      ? "https://explorer.shardeum.org"
-      : "https://explorer-mezame.shardeum.org";
+    console.log("✅ TokenFactory deployed!");
+    console.log("📍 Address:", factoryAddress);
+    console.log("🔗 Explorer: https://explorer-mezame.shardeum.org/address/" + factoryAddress);
+    console.log("");
 
-  console.log("\n" + "=".repeat(50));
-  console.log("Deployment complete!");
-  console.log(`  SimpleStorage: ${explorerBase}/address/${ssAddress}`);
-  console.log(`  ShardeumToken: ${explorerBase}/address/${tokenAddress}`);
-  console.log("=".repeat(50));
+    // Save address to config file
+    const config = {
+        TokenFactory: factoryAddress,
+        network: "Shardeum Testnet",
+        chainId: 8119,
+        deployedAt: new Date().toISOString(),
+        deployer: deployer.address
+    };
+
+    // Save to root
+    fs.writeFileSync(
+        path.join(__dirname, "../contract-config.json"),
+        JSON.stringify(config, null, 2)
+    );
+
+    // Also save to frontend folder if it exists
+    const frontendPaths = ["../frontend", "../src", "../public"];
+    for (const p of frontendPaths) {
+        const fullPath = path.join(__dirname, p);
+        if (fs.existsSync(fullPath)) {
+            fs.writeFileSync(
+                path.join(fullPath, "contract-config.json"),
+                JSON.stringify(config, null, 2)
+            );
+            console.log("📄 Config saved to", p);
+        }
+    }
+
+    console.log("📄 contract-config.json saved to project root");
+    console.log("\n✅ Deployment complete!");
+    console.log("👉 Copy this address into your frontend blockchain.js:");
+    console.log('   const FACTORY_ADDRESS = "' + factoryAddress + '";');
 }
 
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error("❌ Deployment failed:", error);
+    process.exitCode = 1;
 });

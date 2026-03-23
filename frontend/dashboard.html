@@ -110,7 +110,7 @@
 <h2 class="text-2xl font-headline font-extrabold text-on-background">Connect Wallet to Continue</h2>
 <p class="text-on-surface-variant text-sm px-4 leading-relaxed">You need to connect your MetaMask wallet to view your token dashboard and manage assets.</p>
 </div>
-<button class="w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-bold text-lg shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<button class="w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-bold text-lg shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all" id="walletBtn">
                 Connect Wallet
             </button>
 </div>
@@ -123,9 +123,9 @@
 <div class="flex items-center gap-8">
 <span class="text-2xl font-bold text-[#e4e3fe] tracking-tighter">CampusToken</span>
 <div class="hidden md:flex gap-6">
-<a class="text-[#ca98ff] font-bold border-b-2 border-[#ca98ff] pb-1" href="#">Launchpad</a>
-<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Tokens</a>
-<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Staking</a><a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="{{DATA:SCREEN:SCREEN_8}}">Leaderboards</a>
+<a class="text-[#ca98ff] font-bold border-b-2 border-[#ca98ff] pb-1" href="index.html">Launchpad</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="dashboard.html">Tokens</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Staking</a><a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="leaderboard.html">Leaderboards</a>
 <a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Governance</a>
 </div>
 </div>
@@ -169,25 +169,25 @@
 <div class="space-y-6">
 <div>
 <h2 class="text-on-surface-variant text-sm font-medium tracking-widest uppercase mb-1">Token Name</h2>
-<p class="text-3xl font-headline font-bold text-primary">CS Club Token</p>
+<p class="text-3xl font-headline font-bold text-primary" id="displayTokenName">CS Club Token</p>
 </div>
 <div class="grid grid-cols-2 gap-8">
 <div>
 <h3 class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-1">Symbol</h3>
-<p class="text-xl font-headline font-bold">CSCT</p>
+<p class="text-xl font-headline font-bold" id="displayTokenSymbol">CSCT</p>
 </div>
 <div>
 <h3 class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-1">Total Supply</h3>
-<p class="text-xl font-headline font-bold">10,000</p>
+<p class="text-xl font-headline font-bold" id="displayTotalSupply">10,000</p>
 </div>
 </div>
 <div>
 <h3 class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-2">Contract Address</h3>
 <div class="flex items-center gap-3">
 <div class="flex items-center gap-3 bg-surface-container-lowest/50 p-3 rounded-xl w-fit border border-outline-variant/10">
-<code class="text-secondary text-sm font-mono">0x123...456</code>
+<code class="text-secondary text-sm font-mono" id="displayTokenAddress">0x123...456</code>
 <div class="relative group/tooltip">
-<button class="text-on-surface-variant hover:text-secondary transition-colors flex items-center">
+<button class="text-on-surface-variant hover:text-secondary transition-colors flex items-center" id="copyAddressBtn">
 <span class="material-symbols-outlined text-lg">content_copy</span>
 </button>
 <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-surface-bright text-[10px] rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Copied!</span>
@@ -211,8 +211,8 @@
 </svg>
 <div class="flex flex-col items-center">
 <h2 class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">Holdings</h2>
-<p class="text-4xl font-headline font-extrabold text-on-surface leading-tight">10,000</p>
-<p class="text-secondary font-bold text-xs tracking-widest">CSCT</p>
+<p class="text-4xl font-headline font-extrabold text-on-surface leading-tight" id="displayBalance">10,000</p>
+<p class="text-secondary font-bold text-xs tracking-widest" id="displaySymbol">CSCT</p>
 </div>
 </div>
 <p class="mt-4 text-[10px] font-medium text-on-surface-variant uppercase tracking-widest">100% of Total Supply</p>
@@ -249,7 +249,7 @@
                                 View All <span class="material-symbols-outlined text-xs">arrow_forward</span>
 </button>
 </div>
-<div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+<div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar" id="activityFeed">
 <!-- Skeleton Loading State -->
 <div class="flex items-center justify-between p-4 rounded-xl bg-surface-container/20 border border-outline-variant/5 animate-pulse">
 <div class="flex items-center gap-4">
@@ -327,19 +327,19 @@
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Recipient Wallet</label>
 <div class="relative">
-<input class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-full px-5 py-3 pr-12 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-on-surface-variant/40 focus:border-secondary/40 transition-all" placeholder="0x..." type="text" value="0x789...101"/>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-full px-5 py-3 pr-12 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-on-surface-variant/40 focus:border-secondary/40 transition-all" placeholder="0x..." type="text" value="0x789...101" id="recipientAddress"/>
 <span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#4ADE80] text-lg">check_circle</span>
 </div>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Amount (CSCT)</label>
 <div class="relative">
-<input class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-full px-5 py-3 pr-20 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-on-surface-variant/40 focus:border-secondary/40 transition-all" placeholder="0.00" type="number"/>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-full px-5 py-3 pr-20 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-on-surface-variant/40 focus:border-secondary/40 transition-all" placeholder="0.00" type="number" id="sendAmount"/>
 <button class="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors">Max</button>
 </div>
 </div>
 <div class="pt-2">
-<button class="w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<button class="w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all" id="sendBtn">
                                     Send Tokens
                                 </button>
 <div class="mt-4 flex items-center justify-between">
@@ -421,4 +421,49 @@
 </div>
 </footer>
 </div>
+<!-- Ethers.js with fallback CDNs -->
+<script>
+(function() {
+    var cdns = [
+        "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js",
+        "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js",
+        "https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"
+    ];
+    var idx = 0;
+    function loadNext() {
+        if (idx >= cdns.length) {
+            alert("Failed to load Ethers.js. Please check your internet connection.");
+            return;
+        }
+        var s = document.createElement("script");
+        s.src = cdns[idx++];
+        s.onload = function() {
+            console.log("✅ Ethers.js loaded!");
+            var b = document.createElement("script");
+            b.src = "./blockchain.js";
+            b.onload = function() {
+                console.log("✅ blockchain.js loaded!");
+                // Auto-load dashboard if wallet already connected
+                if (window.ethereum) {
+                    window.ethereum.request({ method: "eth_accounts" }).then(function(accounts) {
+                        if (accounts.length > 0) connectWallet();
+                    });
+                }
+            };
+            document.body.appendChild(b);
+        };
+        s.onerror = function() {
+            console.warn("CDN failed, trying next:", s.src);
+            loadNext();
+        };
+        document.body.appendChild(s);
+    }
+    loadNext();
+})();
+
+// Dashboard-specific: called after wallet connects
+async function onWalletConnected() {
+    await loadDashboard();
+}
+</script>
 </body></html>
