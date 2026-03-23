@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CampusToken | Ecosystem Leaderboards</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#5af8fb",
+                        "surface-container": "#16172f",
+                        "surface-dim": "#0b0c1f",
+                        "tertiary": "#ff8b9a",
+                        "error-container": "#a70138",
+                        "surface": "#0b0c1f",
+                        "on-background": "#e4e3fe",
+                        "background": "#0b0c1f",
+                        "outline-variant": "#45465c",
+                        "surface-tint": "#ca98ff",
+                        "inverse-primary": "#8523dd",
+                        "secondary-dim": "#46eaed",
+                        "primary-fixed-dim": "#b772ff",
+                        "inverse-on-surface": "#53536a",
+                        "on-surface-variant": "#a9a9c3",
+                        "surface-bright": "#282947",
+                        "on-primary-fixed-variant": "#420078",
+                        "on-tertiary-fixed": "#39000e",
+                        "surface-variant": "#22233f",
+                        "on-primary-fixed": "#000000",
+                        "on-surface": "#e4e3fe",
+                        "on-tertiary-fixed-variant": "#711229",
+                        "tertiary-dim": "#f47788",
+                        "outline": "#73738b",
+                        "error-dim": "#d73357",
+                        "primary-fixed": "#c185ff",
+                        "surface-container-high": "#1c1d37",
+                        "secondary-container": "#00696b",
+                        "tertiary-fixed": "#ff909e",
+                        "on-primary": "#46007d",
+                        "secondary-fixed-dim": "#46eaed",
+                        "on-error-container": "#ffb2b9",
+                        "on-primary-container": "#350062",
+                        "secondary": "#5af8fb",
+                        "on-tertiary-container": "#4d0015",
+                        "on-tertiary": "#62041f",
+                        "tertiary-fixed-dim": "#fa7c8d",
+                        "surface-container-low": "#101127",
+                        "on-secondary-fixed": "#004748",
+                        "error": "#ff6e84",
+                        "on-secondary-container": "#d9ffff",
+                        "primary-dim": "#9c42f4",
+                        "primary-container": "#c185ff",
+                        "on-secondary-fixed-variant": "#006668",
+                        "primary": "#ca98ff",
+                        "surface-container-highest": "#22233f",
+                        "on-secondary": "#005b5d",
+                        "inverse-surface": "#fbf8ff",
+                        "surface-container-lowest": "#000000",
+                        "tertiary-container": "#f7798b",
+                        "on-error": "#490013"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .shimmer-gold {
+            background: linear-gradient(90deg, #ffd700 0%, #fff 50%, #ffd700 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .glass-panel {
+            background: rgba(34, 35, 63, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(228, 227, 254, 0.05);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #45465c; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#0b0c1f]/80 backdrop-blur-xl shadow-2xl shadow-purple-900/10 font-['Plus_Jakarta_Sans'] antialiased">
+<div class="flex justify-between items-center px-8 h-20 w-full max-w-7xl mx-auto">
+<div class="text-2xl font-bold tracking-tight text-[#e4e3fe]">CampusToken</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Launchpad</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Tokens</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Staking</a>
+<a class="text-[#e4e3fe]/70 hover:text-[#e4e3fe] transition-colors" href="#">Governance</a>
+<a class="text-[#ca98ff] font-bold border-b-2 border-[#ca98ff] pb-1" href="#">Leaderboards</a>
+</div>
+<button class="bg-primary text-on-primary-fixed px-6 py-2.5 rounded-full font-bold active:scale-95 transition-transform">Connect Wallet</button>
+</div>
+</nav>
+<main class="pt-32 pb-20 px-8 max-w-7xl mx-auto relative overflow-x-hidden">
+<!-- Header Stats -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="surface-container-low p-8 rounded-lg relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-start justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1 uppercase tracking-widest">Active Tokens</p>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface">1,248</h2>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">token</span>
+</div>
+</div>
+<div class="surface-container-low p-8 rounded-lg relative overflow-hidden group border-l-4 border-secondary/20">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-start justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1 uppercase tracking-widest">SHM Staked</p>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface">450,230</h2>
+</div>
+<span class="material-symbols-outlined text-secondary text-3xl">account_balance_wallet</span>
+</div>
+</div>
+<div class="surface-container-low p-8 rounded-lg relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-start justify-between">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1 uppercase tracking-widest">Global Students</p>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface">28,192</h2>
+</div>
+<span class="material-symbols-outlined text-tertiary text-3xl">groups</span>
+</div>
+</div>
+</section>
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Left Side: Leaderboards Content -->
+<div class="flex-1 min-w-0">
+<!-- Search & Filters Bar -->
+<div class="bg-surface-container-low p-4 rounded-xl mb-8 flex flex-wrap items-center gap-4">
+<div class="relative flex-1 min-w-[280px]">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-full pl-12 pr-12 py-3 focus:ring-2 focus:ring-secondary/20 text-on-surface" placeholder="Search tokens or student tags..." type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2">
+<svg class="animate-spin h-5 w-5 text-secondary/40" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative group">
+<button class="flex items-center gap-2 bg-surface-container rounded-full px-5 py-3 hover:bg-surface-container-high transition-colors">
+<span class="text-sm font-medium">All Communities</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="absolute top-full mt-2 left-0 w-48 glass-panel rounded-xl overflow-hidden shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">All Communities</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Tech &amp; Web3</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Sports &amp; E-sports</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Arts &amp; Media</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Governance</a>
+</div>
+</div>
+<div class="relative group">
+<button class="flex items-center gap-2 bg-surface-container rounded-full px-5 py-3 hover:bg-surface-container-high transition-colors">
+<span class="text-sm font-medium">Last 7 Days</span>
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+</button>
+<div class="absolute top-full mt-2 right-0 w-40 glass-panel rounded-xl overflow-hidden shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Last 24h</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors font-bold text-primary" href="#">Last 7 Days</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors" href="#">Last 30 Days</a>
+<a class="block px-4 py-3 hover:bg-white/5 text-sm transition-colors border-t border-white/5" href="#">All Time</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Switcher -->
+<div class="flex items-center gap-8 border-b border-outline-variant/20 mb-6">
+<button class="pb-4 text-primary border-b-2 border-primary font-bold transition-all">All Tokens</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-all">Your Tokens</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-2">
+                        Trending
+                        <span class="bg-primary/20 text-primary px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-tighter">Live</span>
+</button>
+</div>
+<!-- Rankings Table -->
+<div class="bg-surface-container-low rounded-lg overflow-hidden">
+<table class="w-full text-left">
+<thead>
+<tr class="text-on-surface-variant text-xs uppercase tracking-widest border-b border-outline-variant/10">
+<th class="px-6 py-4 font-semibold"># Rank</th>
+<th class="px-6 py-4 font-semibold">Token &amp; Community</th>
+<th class="px-6 py-4 font-semibold">Price (SHM)</th>
+<th class="px-6 py-4 font-semibold">24h Change</th>
+<th class="px-6 py-4 font-semibold text-right">Market Cap</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1: Gold Winner -->
+<tr class="hover:bg-primary/5 transition-all cursor-pointer group relative">
+<td class="px-6 py-6">
+<div class="shimmer-gold font-headline font-black text-2xl">01</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center relative">
+<img alt="Abstract purple space token logo" class="w-full h-full rounded-full object-cover" data-alt="Abstract purple space token logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa3e0EdtbwTMWawSPk_NEV-fX82n4v-eoyxojri99HIOr_ITIisCXDUtXl5TUwYuT-LStAwkb_blswX_SWqXNXHyqVaEojPL-UmoUZTm61T8N76Kbh6KgfrjiiT_YHlIQse7osNT6u958O2BeHyYxn53sab5MZJWjCFenvBi0tAq0myVzyx1GBuv7cnLnb2c7NSkgczmWuQvT4vEvJAIJrYE9ePVfxG1Y3PzeLrdiULqeOEbtma3K4MMYybkelCQBwh0GOPj2L3kYk"/>
+<div class="absolute -top-1 -right-1 bg-secondary w-3 h-3 rounded-full border-2 border-surface"></div>
+</div>
+<div>
+<div class="font-bold flex items-center gap-2">
+                                                NebulaDAO <span class="bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-md text-[10px]">🔥 TRENDING</span>
+</div>
+<div class="text-xs text-on-surface-variant">Tech &amp; Innovation</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-medium">1.45 SHM</td>
+<td class="px-6 py-6 text-secondary font-bold">+14.2%</td>
+<td class="px-6 py-6 text-right font-headline text-on-surface-variant">12.4M SHM</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-all cursor-pointer group">
+<td class="px-6 py-6 text-xl font-headline font-bold text-on-surface-variant">02</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<img alt="Geometric cyan token icon" class="w-full h-full rounded-full object-cover" data-alt="Geometric cyan token icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKamNkz008xx9LufqQ6RZY5SYKmVb-Tpncs-qhOJjaoOy3Kz7T3FHN2a7YtP31xrKWpEN8MOvJqZM1Nogo_0s-sw7sqX8b2_c9mdbmXW-FGnUOY1M2qOFvcqX-RzzGz63lkAl0XT0SvmcPR0HjzFDp2DWHUpzAfqXzyMx_QiXmzMNNd9cJlIcE1vufYumREZLo4C8rLgE4yPS0WzE7TqZ1Lfaj7oHmX01_wbFxL2tWHHEsyXWvLSQCo-aphVMb8srkFJHQ_R0GbqEf"/>
+</div>
+<div>
+<div class="font-bold">AlphaNodes</div>
+<div class="text-xs text-on-surface-variant">Infrastructure</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-medium">0.82 SHM</td>
+<td class="px-6 py-6 text-secondary font-bold">+4.1%</td>
+<td class="px-6 py-6 text-right font-headline text-on-surface-variant">8.1M SHM</td>
+</tr>
+<!-- Row 3: New -->
+<tr class="hover:bg-primary/5 transition-all cursor-pointer group">
+<td class="px-6 py-6 text-xl font-headline font-bold text-on-surface-variant">03</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<img alt="Green digital pattern token" class="w-full h-full rounded-full object-cover" data-alt="Green digital pattern token" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbmPapXdsIbzMZ7s5xSRxApKnCRSHx1a4jUJaSo397T9Eo7ZC6XR1KTC-MDp9eB-1UcEeKaqxFtyl1TPbasX5S3L_loh9Ht2tA6POUdviaYRrSYCrMw_aV4Mn10LEoP6gv6V2aNX4hUMWZgofJnSghX6q0tHwRVyvz6reAviUUVOgoNaGZhgrRI9VWy1ja2OEON52y9hLtO9WbGNm9bWdExlCO0Vs19RW5_vyyGkvTRFfVhaaqPyGkwyhbvtupPQRy2B4letB1wEG5"/>
+</div>
+<div>
+<div class="font-bold flex items-center gap-2">
+                                                EcoVarsity <span class="bg-secondary/20 text-secondary px-2 py-0.5 rounded-md text-[10px] uppercase">NEW</span>
+</div>
+<div class="text-xs text-on-surface-variant">Science &amp; Sustainability</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-medium">0.12 SHM</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">+0.0%</td>
+<td class="px-6 py-6 text-right font-headline text-on-surface-variant">2.1M SHM</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-all cursor-pointer group">
+<td class="px-6 py-6 text-xl font-headline font-bold text-on-surface-variant">04</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<img alt="Pink fluid art token logo" class="w-full h-full rounded-full object-cover" data-alt="Pink fluid art token logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwGXn4HM68RnPEPPrIF48X2k4YWfzzRTyaJyaKoKsZjAtkC6C1qBnrusMcAPeK9CieUFX4Ifnw959ctRZ307P9qwSQhL9gmfcWZBfG6d7OeyvTMlzTQU37L5k-mWEZ1AJrqZftqzkj1wc4KmwYjvn081HR7bfOej1K89gEJ0eVUC3xIaE3OASq5nomMtIS82hLQBu-hVYgYtTA9Zo6Pqm41uY5DygehIwIBZlG7jGMVNF6HMB8n04t0XGIME8a-Mu-hG12BI6rDB67"/>
+</div>
+<div>
+<div class="font-bold">CreativeHub</div>
+<div class="text-xs text-on-surface-variant">Arts &amp; Media</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-medium">2.30 SHM</td>
+<td class="px-6 py-6 text-error font-bold">-2.4%</td>
+<td class="px-6 py-6 text-right font-headline text-on-surface-variant">1.9M SHM</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Right Side: Sticky Widgets -->
+<div class="lg:w-80 space-y-8">
+<!-- Top Holders Section -->
+<div class="surface-container-low p-6 rounded-lg">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg">Top Student Holders</h3>
+<span class="material-symbols-outlined text-on-surface-variant">insights</span>
+</div>
+<div class="space-y-6">
+<!-- Holder 1 (You) -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-secondary tracking-widest uppercase">YOU</span>
+<span class="text-sm font-medium">ox71...3A92</span>
+</div>
+<span class="text-xs font-headline text-on-surface-variant">42.5k SHM</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<!-- Holder 2 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium">ox12...fE84</span>
+<span class="text-xs font-headline text-on-surface-variant">38.1k SHM</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<!-- Holder 3 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium">ox89...aB11</span>
+<span class="text-xs font-headline text-on-surface-variant">29.4k SHM</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 rounded-full" style="width: 55%"></div>
+</div>
+</div>
+<!-- Holder 4 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium">ox55...cD42</span>
+<span class="text-xs font-headline text-on-surface-variant">18.2k SHM</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary/20 rounded-full" style="width: 35%"></div>
+</div>
+</div>
+<!-- Holder 5 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium">ox33...eF90</span>
+<span class="text-xs font-headline text-on-surface-variant">12.0k SHM</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary/20 rounded-full" style="width: 20%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Launch Banner Card -->
+<div class="bg-gradient-to-br from-[#c185ff] to-[#5af8fb] p-1 rounded-lg">
+<div class="bg-surface-container-lowest p-6 rounded-[calc(0.5rem-1px)] relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-headline font-black text-xl mb-2 text-on-surface">Curate Your Own Campus Asset</h4>
+<p class="text-sm text-on-surface-variant mb-4">Start your journey as a student creator. Zero-gas launch for the next 48 hours.</p>
+<button class="w-full py-3 bg-white text-black font-bold rounded-full hover:scale-105 active:scale-95 transition-all">Launch Token</button>
+</div>
+<!-- Abstract Background Decoration -->
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-secondary blur-3xl opacity-20"></div>
+<div class="absolute -top-10 -left-10 w-32 h-32 bg-primary blur-3xl opacity-20"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Details Panel (Slide-in State Hidden by Default in Code Layout) -->
+<!-- Accessible by clicking row in a real interaction, here defined for visual structure -->
+<div class="fixed top-24 right-8 bottom-8 w-[400px] glass-panel rounded-lg z-[60] translate-x-[120%] transition-transform shadow-2xl overflow-y-auto">
+<div class="p-8">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline font-black text-2xl tracking-tight">Token Insight</h3>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="mb-8">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest mb-4 mx-auto p-1">
+<img alt="Nebula DAO large logo" class="w-full h-full rounded-full object-cover" data-alt="Nebula DAO large logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6omDdPJbEtV0ZUxC3FBEbPPmT8Pfi1iUfGQS10RR4UuaEfuD6JLWWVx5K1XpE5jF2vOeeZg9tt3XsrnxdzUGS61LdAvbuNei5tEysAY6MVJOna3FU0-j87Bcm5CL2vYB82zwaYaA3FjvwEm-k7DbBCZ-RnL4BSsf39Br8IJSV-5O95btoNpxPjslMSDuBLQZxdiNiJkxoAr8v4Z7QVPDZpd9NjxlYHOmEaT5MCVsXqmtDL1x_YosyNfPaY9_p4wvnd0ZVte5kZyw1"/>
+</div>
+<h2 class="text-center font-headline font-extrabold text-3xl mb-1">NebulaDAO</h2>
+<p class="text-center text-secondary font-bold text-sm tracking-widest uppercase mb-6">#01 Community Token</p>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-8">
+                    Empowering the next generation of space-tech developers. NebulaDAO is a student-led collective focused on decentralizing satellite data and rewards.
+                </p>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container-high p-4 rounded-xl">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Creator</span>
+<p class="text-xs font-medium mt-1">ox78...221F</p>
+</div>
+<div class="bg-surface-container-high p-4 rounded-xl">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Launch Date</span>
+<p class="text-xs font-medium mt-1">Oct 12, 2024</p>
+</div>
+<div class="bg-surface-container-high p-4 rounded-xl">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Total Transfers</span>
+<p class="text-xs font-medium mt-1">14,293</p>
+</div>
+<div class="bg-surface-container-high p-4 rounded-xl">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Holders</span>
+<p class="text-xs font-medium mt-1">1,402</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 py-4 bg-surface-container-highest border border-outline-variant/20 rounded-full font-bold hover:bg-surface-container transition-colors mb-4">
+                    View on Explorer
+                    <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+<button class="w-full py-4 bg-primary text-on-primary-fixed rounded-full font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
+                    Trade NebulaDAO
+                </button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0b0c1f] w-full py-12 mt-auto border-t border-white/5 font-['Inter'] text-sm">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto">
+<div class="mb-6 md:mb-0">
+<div class="text-lg font-bold text-[#e4e3fe] mb-2">CampusToken</div>
+<p class="text-[#e4e3fe]/50">© 2024 CampusToken. The Digital Curator for Student Assets.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-[#e4e3fe]/50 hover:text-[#ca98ff] transition-colors" href="#">Documentation</a>
+<a class="text-[#e4e3fe]/50 hover:text-[#ca98ff] transition-colors" href="#">Whitepaper</a>
+<a class="text-[#e4e3fe]/50 hover:text-[#ca98ff] transition-colors" href="#">Privacy Policy</a>
+<a class="text-[#e4e3fe]/50 hover:text-[#ca98ff] transition-colors" href="#">Terms</a>
+</div>
+</div>
+</footer>
+</body></html>
